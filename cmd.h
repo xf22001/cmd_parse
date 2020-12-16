@@ -17,6 +17,9 @@
 #elif defined (__IAR_SYSTEMS_ICC__)             /* IAR Compiler */
     #define SECTION(x)                  @ x
     #define CMD_USED                    __root
+#elif defined(__GNUC__)
+    #define SECTION(x)                  __attribute__((section(x)))
+    #define CMD_USED                    __attribute__((unused))
 #else
     #error "not supported tool chain..."
 #endif
@@ -34,7 +37,7 @@ typedef struct cmd {
 #define REGISTER_CMD(cmd, handler,desc)                         \
     const char _register_##cmd##_cmd[] = #cmd;                  \
     const char _register_##cmd##_desc[] = #desc;                \
-    CMD_USED cmd_t _register_##cmd SECTION("CMDS")=             \
+    CMD_USED cmd_t _register_##cmd SECTION(".CMDS")=             \
     {                                                           \
         _register_##cmd##_cmd,                                  \
         _register_##cmd##_desc,                                 \

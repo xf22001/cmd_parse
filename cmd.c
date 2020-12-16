@@ -64,7 +64,7 @@ static void _list(void)
 {
     cmd_t *index;
     for (index = _cmd_begin; index < _cmd_end; index = _get_next_cmd(index)) {
-        printf("%s -->%s\n",index->cmd,index->desc);
+        printf("%s -->%s\n",index->cmd,index->cmd_mess);
     }
 }
 REGISTER_CMD(_list, _list,list all command);
@@ -79,6 +79,10 @@ void cmd_init(void)
     _cmd_init(&CMDS$$Base, &CMDS$$Limit);
 #elif defined (__ICCARM__) || defined(__ICCRX__)      /* for IAR Compiler */
     _cmd_init(__section_begin("CMDS"), __section_end("CMDS"));
+#elif defined(__GNUC__)
+	extern const int CMDSBase;
+	extern const int CMDSLimit;
+	_cmd_init(&CMDSBase, &CMDSLimit);
 #endif
 
     for (index = _cmd_begin; index < _cmd_end; index = _get_next_cmd(index)) {
